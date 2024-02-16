@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod_api/app/screens/pages/home.dart';
-import 'package:flutter_riverpod_api/app/screens/pages/profile_page.dart';
+import 'package:flutter_riverpod_api/app/screens/pages/profile.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
