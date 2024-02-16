@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/app/widgets/comment_widget.dart';
+import 'package:flutter_riverpod_api/app/widgets/post_popover.dart';
 import 'package:flutter_riverpod_api/core/models/post_model.dart';
 import 'package:flutter_riverpod_api/core/providers/api_provider.dart';
 import 'package:flutter_riverpod_api/core/providers/user_interaction_provider.dart';
@@ -19,6 +21,7 @@ class PostCardWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLiked = ref.watch(likePostProvider(postModel.id));
+    double height = MediaQuery.of(context).size.height;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -29,46 +32,52 @@ class PostCardWidget extends ConsumerWidget {
               builder: (context, ref, child) {
                 return ref.watch(fetchUserProvider(postModel.userId)).when(
                   data: (data) {
-                    return GestureDetector(
-                      onTap: () {
-                        GoRouter.of(context).go(
-                          '/profile',
-                          extra: {'userId': postModel.userId},
-                        );
-                      },
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 22,
-                            backgroundImage: CachedNetworkImageProvider(
-                                'https://picsum.photos/seed/userUid${data.id}/1920/1080'),
-                          ),
-                          const Gap(6),
-                          Column(
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).go(
+                              '/profile',
+                              extra: {'userId': postModel.userId},
+                            );
+                          },
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                data.name,
-                                style: GoogleFonts.lato(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                  fontSize: 14,
-                                ),
+                              CircleAvatar(
+                                radius: !kIsWeb ? 22 : 32,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    'https://picsum.photos/seed/userUid${data.id}/1920/1080'),
                               ),
-                              const Gap(2),
-                              Text(
-                                '@${data.username.toLowerCase()}',
-                                style: GoogleFonts.lato(
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                  fontSize: 11,
-                                ),
+                              const Gap(6),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    data.name,
+                                    style: GoogleFonts.lato(
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                      fontSize: !kIsWeb ? 14 : 20,
+                                    ),
+                                  ),
+                                  const Gap(2),
+                                  Text(
+                                    '@${data.username.toLowerCase()}',
+                                    style: GoogleFonts.lato(
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
+                                      fontSize: !kIsWeb ? 11 : 16,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const PostPopover(),
+                      ],
                     );
                   },
                   error: (error, stackTrace) {
@@ -86,7 +95,7 @@ class PostCardWidget extends ConsumerWidget {
               style: GoogleFonts.lato(
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0.5,
-                fontSize: 14,
+                fontSize: !kIsWeb ? 14 : 18,
               ),
             ),
             const Gap(8),
@@ -103,7 +112,7 @@ class PostCardWidget extends ConsumerWidget {
                       'https://picsum.photos/1920/1080?random=${postModel.id}',
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.24,
+                  height: kIsWeb ? height * 0.75 : height * 0.35,
                 ),
               ),
             ),
@@ -127,7 +136,10 @@ class PostCardWidget extends ConsumerWidget {
                   postId: postModel.id,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    CachedNetworkImage.evictFromCache(
+                        'https://picsum.photos/1920/1080?random=${postModel.id}');
+                  },
                   icon: const Icon(Icons.share_rounded),
                 ),
                 IconButton(

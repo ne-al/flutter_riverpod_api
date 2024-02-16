@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/core/providers/api_provider.dart';
@@ -20,6 +21,12 @@ class ProfilePage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  CircleAvatar(
+                    radius: 70,
+                    backgroundImage: CachedNetworkImageProvider(
+                        'https://picsum.photos/seed/userUid${data.id}/1920/1080'),
+                  ),
+                  const Gap(12),
                   Text(data.name),
                   Text(data.username),
                   Text(data.email),

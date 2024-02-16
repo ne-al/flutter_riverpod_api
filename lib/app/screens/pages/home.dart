@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/app/widgets/post_card_widget.dart';
@@ -14,7 +15,7 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'Home Page',
-          style: GoogleFonts.oswald(),
+          style: GoogleFonts.oswald(fontSize: kIsWeb ? 35 : 24),
         ),
         centerTitle: true,
       ),
