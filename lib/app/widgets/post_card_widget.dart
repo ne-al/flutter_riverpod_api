@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/core/models/post_model.dart';
 import 'package:flutter_riverpod_api/core/providers/api_provider.dart';
+import 'package:flutter_riverpod_api/core/providers/user_interaction_provider.dart';
 import 'package:gap/gap.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,7 @@ class PostCardWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userRef = ref.watch(fetchUserProvider(postModel.userId));
+    final isLiked = ref.watch(likePostProvider(postModel.id));
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -24,7 +25,7 @@ class PostCardWidget extends ConsumerWidget {
           children: [
             Consumer(
               builder: (context, ref, child) {
-                return userRef.when(
+                return ref.watch(fetchUserProvider(postModel.userId)).when(
                   data: (data) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,6 +89,36 @@ class PostCardWidget extends ConsumerWidget {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.24,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    ref
+                        .read(likePostProvider(postModel.id).notifier)
+                        .likePost(postModel.id);
+                  },
+                  icon: isLiked.isLiked != true
+                      ? const Icon(Icons.favorite_border_rounded)
+                      : const Icon(
+                          Icons.favorite_rounded,
+                          color: Colors.red,
+                        ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.insert_comment_rounded),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.share_rounded),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.bar_chart),
+                ),
+              ],
             ),
           ],
         ),

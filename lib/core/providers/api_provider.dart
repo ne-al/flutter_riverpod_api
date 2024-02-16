@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/core/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -27,13 +26,13 @@ final fetchAllPost = FutureProvider.autoDispose<List<dynamic>>(
   },
 );
 
-// final getRandomPic = FutureProvider.autoDispose.family<String, int>(
-//   (ref, index) async {
-//     String url = 'https://picsum.photos/1920/1080?random=$index';
-//     var response = await http.get(Uri.parse(url));
+final fetchPostComments = FutureProvider.autoDispose.family<List<dynamic>, int>(
+  (ref, postId) async {
+    String url = 'https://jsonplaceholder.typicode.com/posts/$postId/comments';
+    var response = await http.get(Uri.parse(url));
 
-//     var value = json.decode(response.body);
+    var value = json.decode(response.body);
 
-//     return value;
-//   },
-// );
+    return value;
+  },
+);
