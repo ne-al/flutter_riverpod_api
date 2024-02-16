@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_api/app/widgets/post_card_widget.dart';
 import 'package:flutter_riverpod_api/core/models/post_model.dart';
 import 'package:flutter_riverpod_api/core/providers/api_provider.dart';
-import 'package:go_router/go_router.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -22,16 +21,8 @@ class HomePage extends ConsumerWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   PostModel modelData = PostModel.fromJson(data[index]);
-                  return GestureDetector(
-                    onTap: () {
-                      GoRouter.of(context).go(
-                        '/profile',
-                        extra: {'userId': modelData.userId},
-                      );
-                    },
-                    child: PostCardWidget(
-                      postModel: modelData,
-                    ),
+                  return PostCardWidget(
+                    postModel: modelData,
                   );
                 },
               );

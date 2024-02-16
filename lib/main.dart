@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Riverpod api',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
+      theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blueAccent,
           brightness: Brightness.dark,
@@ -26,6 +26,13 @@ class MyApp extends StatelessWidget {
           background: Colors.black,
         ),
         useMaterial3: true,
+      ).copyWith(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: <TargetPlatform, PageTransitionsBuilder>{
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
       ),
       routerConfig: router,
     );
