@@ -26,3 +26,14 @@ final fetchAllPost = FutureProvider.autoDispose<List<dynamic>>(
     return value;
   },
 );
+
+// final getRandomPic = FutureProvider.autoDispose.family<String, int>(
+//   (ref, index) async {
+//     String url = 'https://picsum.photos/1920/1080?random=$index';
+//     var response = await http.get(Uri.parse(url));
+
+//     var value = json.decode(response.body);
+
+//     return value;
+//   },
+// );

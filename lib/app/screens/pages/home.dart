@@ -22,29 +22,16 @@ class HomePage extends ConsumerWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   PostModel modelData = PostModel.fromJson(data[index]);
-                  return ref.watch(fetchUserProvider(modelData.userId)).when(
-                    data: (userData) {
-                      return GestureDetector(
-                        onTap: () {
-                          GoRouter.of(context).go(
-                            '/profile',
-                            extra: {'userId': modelData.userId},
-                          );
-                        },
-                        child: PostCardWidget(
-                          userModel: userData,
-                          postModel: modelData,
-                        ),
+                  return GestureDetector(
+                    onTap: () {
+                      GoRouter.of(context).go(
+                        '/profile',
+                        extra: {'userId': modelData.userId},
                       );
                     },
-                    error: (error, stackTrace) {
-                      return Center(
-                        child: Text(error.toString()),
-                      );
-                    },
-                    loading: () {
-                      return;
-                    },
+                    child: PostCardWidget(
+                      postModel: modelData,
+                    ),
                   );
                 },
               );
